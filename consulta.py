@@ -22,6 +22,7 @@ arq = Arquivo()
 class Consulta:
     def loginSimAm(self, usuario,senha):
         try:
+            global browser
             browser.get("https://servicos.tce.pr.gov.br/tcepr/municipal/simam/Paginas/Consulta.aspx")
             username = browser.find_element_by_id("Login")
             password = browser.find_element_by_id("Senha")

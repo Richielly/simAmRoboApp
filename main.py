@@ -5,6 +5,10 @@ from util import Util
 
 utl = Util()
 cfg = configparser.ConfigParser()
+if not os.path.exists('cfg.ini'):
+    with open('cfg.ini', 'w') as file:
+        file.write('[DEFAULT]' + '\n')
+        utl.update_cfg(secao='DEFAULT', chave='pasta_download', new='')
 cfg.read('cfg.ini')
 def pages(page: ft.Page):
 
