@@ -1,9 +1,12 @@
 import os
 import glob
 import shutil
+import configparser
 
-caminho_origem = 'C:\\Users\\equiplano\\Downloads\\'
-# caminho_destino = 'C:\\Users\\equiplano\\Downloads\\SimAm\\'
+cfg = configparser.ConfigParser()
+cfg.read('cfg.ini')
+
+caminho_origem = cfg['DEFAULT']['pasta_download']
 caminho_destino = os.getcwd() + '\\RepositorioArquivosSimAm\\'
 class Arquivo:
     def renomear_arquivo(self, competencia,exercicio):
@@ -27,11 +30,15 @@ class Arquivo:
         pass
 
     def criar_arquivo_log(self):
-        log = open('log.txt', 'w')
+        if not os.path.exists(caminho_destino):
+            os.makedirs(caminho_destino)
+        log = open(caminho_destino+'log.txt', 'w')
         log.close()
 
     def registrar_log(self, mensagem):
-        os.chdir(caminho_origem)
+        if not os.path.exists(caminho_destino):
+            os.makedirs(caminho_destino)
+        os.chdir(caminho_destino)
         if os.path.exists("log.txt"):
             arquivo = open('log.txt', 'r')
             log = arquivo.readlines()

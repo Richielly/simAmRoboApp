@@ -1,7 +1,11 @@
 import os
 import flet as ft
 import configparser
+from util import Util
 
+utl = Util()
+cfg = configparser.ConfigParser()
+cfg.read('cfg.ini')
 def pages(page: ft.Page):
 
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -14,6 +18,9 @@ def pages(page: ft.Page):
     lista_competencias = []
 
     def start(e):
+        utl.update_cfg(secao='DEFAULT', chave='pasta_download', new=txt_pasta_daownload.value)
+        utl.update_cfg(new=txt_pasta_daownload.value)
+        cfg.read('cfg.ini')
         for i in exercecios.controls:
             if i.value:
                 lista_exercicio.append(int(i.label))
@@ -44,18 +51,6 @@ def pages(page: ft.Page):
             btn_start.disabled = False
             page.add(txt_footer)
             page.update()
-
-
-        # utl.update_cfg(secao='DEFAULT', chave='nomebanco', new=txt_database.value)
-        # utl.update_cfg(new=txt_entidade.value)
-        # cfg.read('cfg.ini')
-        # sqls = script_analise_destino.Script().query(txt_entidade.value)
-        # analise_data = {}
-        # if cursor:
-        #     for sql in sqls.items():
-        #         cursor.execute(sql[1])
-        #         analise_data[sql[0]] = cursor.fetchone()
-        #     page.update()
 
     def checkbox_changed_exercicio(e):
         ex_2013.value=ex_all.value
@@ -92,7 +87,7 @@ def pages(page: ft.Page):
     page.add(ft.Text("Arquivos Sim Am", size=20, color='blue'))
     txt_user = ft.TextField(label="User", text_size=12, width=250, height=35)
     txt_password = ft.TextField(label="Password", text_size=12, width=250, height=35, password=True, can_reveal_password=True)
-    txt_pasta_daownload = ft.TextField(label="Pasta de download padão do navegador", text_size=12, width=700, height=35)
+    txt_pasta_daownload = ft.TextField(label="Pasta de download padão do navegador", value=cfg['DEFAULT']['pasta_download'],text_size=12, width=700, height=35)
     txt_footer = ft.Text("Processo Finalizado", size=20, color='green')
     divisor = ft.Divider(height=2, thickness=3)
 

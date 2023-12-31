@@ -100,15 +100,6 @@ class Consulta:
         arq.registrar_log("Navegador finalizado em: "+datetime.now().strftime('%d/%m/%Y %H:%M'))
 
     def start(self, exercicios, competencias, usuario, senha):
-        
-        # exercicios = [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
-        # # exercicios = [2022, 2023]
-        #
-        # competencias = ['Abertura de Exercício','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto',
-        #             'Setembro','Outubro','Novembro','Dezembro','Encerramento de Exercício']
-
-        # exercicios = cfg['Camara_Urai']['exercicios']
-        # competencias = cfg['Camara_Urai']['competencias']
 
         logado = self.loginSimAm(usuario, senha)
         time.sleep(7)
