@@ -110,6 +110,6 @@ class Consulta:
                 self.rota(exercicio,competencia)
 
         arq.registrar_log(" ########## Processo finalizado em: " + datetime.now().strftime('%d/%m/%Y %H:%M' + " ##########"))
-        self.finalizarNavegador()
+        # self.finalizarNavegador()
 
 

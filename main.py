@@ -18,10 +18,9 @@ def pages(page: ft.Page):
     page.title = "Arquivos SimAm Robô V_1.0.0"
     progressBar = ft.ProgressBar(width=700,color=ft.colors.GREEN_ACCENT_700)
 
-    lista_exercicio = []
-    lista_competencias = []
-
     def start(e):
+        lista_exercicio = []
+        lista_competencias = []
         utl.update_cfg(secao='DEFAULT', chave='pasta_download', new=txt_pasta_daownload.value)
         utl.update_cfg(new=txt_pasta_daownload.value)
         cfg.read('cfg.ini')
@@ -42,7 +41,9 @@ def pages(page: ft.Page):
             comp_all.disabled = True
             competencias.disabled = True
             page.add(progressBar)
+            progressBar.value = None
             btn_start.disabled=True
+            txt_footer.value = 'Processo em Andamento.'
             page.update()
             from consulta import Consulta
             t = Consulta()
@@ -53,7 +54,7 @@ def pages(page: ft.Page):
             comp_all.disabled = False
             competencias.disabled = False
             btn_start.disabled = False
-            page.add(txt_footer)
+            txt_footer.value = 'Processo Finalizado.'
             page.update()
 
     def checkbox_changed_exercicio(e):
@@ -92,7 +93,7 @@ def pages(page: ft.Page):
     txt_user = ft.TextField(label="User", text_size=12, width=250, height=35)
     txt_password = ft.TextField(label="Password", text_size=12, width=250, height=35, password=True, can_reveal_password=True)
     txt_pasta_daownload = ft.TextField(label="Pasta de download padão do navegador", value=cfg['DEFAULT']['pasta_download'],text_size=12, width=700, height=35)
-    txt_footer = ft.Text("Processo Finalizado", size=20, color='green')
+    txt_footer = ft.Text("", size=20, color='green')
     divisor = ft.Divider(height=2, thickness=3)
 
     btn_start = ft.ElevatedButton("Iniciar", on_click=start, icon=ft.icons.DOWNLOADING)
@@ -130,7 +131,7 @@ def pages(page: ft.Page):
     fechamento = ft.Checkbox(label="Encerramento de Exercício", value=False)
 
     competencias = ft.Row([abertura, janeiro, fevereiro, marco, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro, fechamento])
-
+    page.add(txt_footer)
     list_arquivos = ft.ListView(expand=1, spacing=2, padding=20, auto_scroll=True)
 
     t = ft.Tabs(
