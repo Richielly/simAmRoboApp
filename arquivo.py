@@ -26,7 +26,7 @@ class Arquivo:
             caminho = os.makedirs(caminho_destino+str(exercicio))
             return False
 
-    def listar_dirretorios(self):
+    def listar_diretorios(self):
         pass
 
     def criar_arquivo_log(self):
@@ -121,9 +121,6 @@ class Arquivo:
 
         texto_exercicio = texto_competencia[0]
         texto_exercicio = texto_exercicio[-4::]
-
-        # print("Exercicio: ", texto_exercicio)
-        # print("Competêcia: ", texto_competencia[1])
 
         return texto_exercicio, texto_competencia[1]
 

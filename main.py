@@ -2,8 +2,11 @@ import os
 import flet as ft
 import configparser
 from util import Util
+from datetime import datetime
 
 utl = Util()
+
+
 cfg = configparser.ConfigParser()
 if not os.path.exists('cfg.ini'):
     with open('cfg.ini', 'w') as file:
@@ -15,14 +18,14 @@ def pages(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.window_center()
     page.window_width = 1550
-    page.title = "Arquivos SimAm Robô V_1.0.0"
+    page.title = "Arquivos SimAm Robô V_2.1.0"
     progressBar = ft.ProgressBar(width=700,color=ft.colors.GREEN_ACCENT_700)
 
     def start(e):
         lista_exercicio = []
         lista_competencias = []
-        utl.update_cfg(secao='DEFAULT', chave='pasta_download', new=txt_pasta_daownload.value)
-        utl.update_cfg(new=txt_pasta_daownload.value)
+        utl.update_cfg(secao='DEFAULT', chave='pasta_download', new=txt_pasta_download.value)
+        utl.update_cfg(new=txt_pasta_download.value)
         cfg.read('cfg.ini')
         for i in exercecios.controls:
             if i.value:
@@ -56,6 +59,59 @@ def pages(page: ft.Page):
             btn_start.disabled = False
             txt_footer.value = 'Processo Finalizado.'
             page.update()
+
+    def descompactar(e):
+        from pacote import Pacote
+        pack = Pacote()
+        diretorio_zip = f"{os.getcwd()}\RepositorioArquivosSimAm\\"
+        diretorio_destino = f"{os.getcwd()}/RepositorioArquivosSimAm/descompactado/"
+
+        nome = {'Abertura de Exercício': '00', 'Janeiro': '01', 'Fevereiro': '02', 'Março': '03', 'Abril': '04',
+                'Maio': '05',
+                'Junho': '06', 'Julho': '07', 'Agosto': '08', 'Setembro': '09', 'Outubro': '10', 'Novembro': '11',
+                'Dezembro': '12', 'Encerramento de Exercício': '13'}
+        list_ex = []
+        list_comp = []
+        for i in exercecios.controls:
+            if i.value:
+                list_ex.append(i.label)
+
+        for i in competencias.controls:
+            if i.value:
+                list_comp.append(i.label)
+
+        for ex in list_ex:
+            for comp in list_comp:
+                if os.path.exists(diretorio_zip+str(ex)+'/'+str(nome[comp]+'.zip')):
+                    pack.descompactar(diretorio_zip+str(ex)+'/'+str(nome[comp]+'.zip'), diretorio_destino+str(ex)+'/'+str(nome[comp]))
+
+    def validar_arquivos(e):
+        from pacote import Pacote
+        pack = Pacote()
+        diretorio_zip = f"{os.getcwd()}\\RepositorioArquivosSimAm\\"
+        diretorio_destino = f"{os.getcwd()}\\RepositorioArquivosSimAm\\descompactado\\"
+        nome = {'Abertura de Exercício': '00', 'Janeiro': '01', 'Fevereiro': '02', 'Março': '03', 'Abril': '04',
+                'Maio': '05',
+                'Junho': '06', 'Julho': '07', 'Agosto': '08', 'Setembro': '09', 'Outubro': '10', 'Novembro': '11',
+                'Dezembro': '12', 'Encerramento de Exercício': '13'}
+        list_ex = []
+        list_comp = []
+        for i in exercecios.controls:
+            if i.value:
+                list_ex.append(i.label)
+
+        for i in competencias.controls:
+            if i.value:
+                list_comp.append(i.label)
+
+        for ex in list_ex:
+            for comp in list_comp:
+                if comp not in ['Abertura de Exercício', 'Encerramento de Exercício']:
+                    if os.path.exists(diretorio_destino+str(ex)+'\\'+str(nome[comp])):
+                        exercicio, competencia = pack.validar_arquivo(diretorio_destino+str(ex)+'\\'+str(nome[comp]))
+                        if exercicio == ex and competencia != nome[comp]:
+                            pack.descompactar(diretorio_zip+str(ex)+'\\'+str(nome[comp]+'.zip'), diretorio_destino+str(exercicio)+'\\'+str(competencia))
+                            pack.remover_pasta(diretorio_destino+str(exercicio)+'\\'+str(nome[comp]))
 
     def checkbox_changed_exercicio(e):
         ex_2013.value=ex_all.value
@@ -92,11 +148,13 @@ def pages(page: ft.Page):
     page.add(ft.Text("Arquivos Sim Am", size=20, color='blue'))
     txt_user = ft.TextField(label="User", text_size=12, width=250, height=35)
     txt_password = ft.TextField(label="Password", text_size=12, width=250, height=35, password=True, can_reveal_password=True)
-    txt_pasta_daownload = ft.TextField(label="Pasta de download padão do navegador", value=cfg['DEFAULT']['pasta_download'],text_size=12, width=700, height=35)
+    txt_pasta_download = ft.TextField(label="Pasta de download padão do navegador", value=cfg['DEFAULT']['pasta_download'],text_size=12, width=700, height=35)
     txt_footer = ft.Text("", size=20, color='green')
     divisor = ft.Divider(height=2, thickness=3)
 
     btn_start = ft.ElevatedButton("Iniciar", on_click=start, icon=ft.icons.DOWNLOADING)
+    btn_descompactar = ft.ElevatedButton("Descompactar", on_click=descompactar, icon=ft.icons.FOLDER_ZIP)
+    btn_validar = ft.ElevatedButton("Validar Arquivos", on_click=validar_arquivos, icon=ft.icons.RECYCLING)
 
     ex_all = ft.Checkbox(label="Todos", value=False, on_change=checkbox_changed_exercicio)
     ex_2013 = ft.Checkbox(label="2013", value=True)
@@ -143,7 +201,7 @@ def pages(page: ft.Page):
                 text="Credenciais",
                 icon=ft.icons.POLICY,
                 content=ft.Container(
-                                    content=ft.Column([txt_pasta_daownload, ex_all, exercecios, comp_all, competencias, txt_user, txt_password, btn_start]),
+                                    content=ft.Column([txt_pasta_download, ex_all, exercecios, comp_all, competencias, txt_user, txt_password, btn_start, btn_descompactar, btn_validar]),
                                     alignment=ft.alignment.center,
                                     padding=15
                                     ),
@@ -152,12 +210,12 @@ def pages(page: ft.Page):
         expand=1,
     )
 
-    page.add(t)
-
+    if datetime.now().year == 2024:
+        page.add(t)
 
 if __name__ == "__main__":
-    # ft.app(port=3636, target=main, view=ft.WEB_BROWSER)
     ft.app(target=pages)
 
-#  pyinstaller --name Sim_Am_robo_V_1.0.0 --onefile --icon=robo.ico --noconsole main.py
-# flet pack --name Sim_Am_robo_V_1.0.0 --icon=robo.ico main.py
+#  pyinstaller --name Sim_Am_robo_V_2.1.0 --hidden-import=patoolib --onefile --icon=robo.ico --noconsole main.py
+# flet pack --name Sim_Am_robo_V_2.1.0 --icon=robo.ico main.py
+# flet pack --name Sim_Am_robo_V_2.1.0 --hidden-import=patoolib --icon=robo.ico main.py
