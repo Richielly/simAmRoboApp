@@ -63,7 +63,7 @@ def pages(page: ft.Page):
     def descompactar(e):
         from pacote import Pacote
         pack = Pacote()
-        diretorio_zip = f"{os.getcwd()}\RepositorioArquivosSimAm\\"
+        diretorio_zip = f"{os.getcwd()}/RepositorioArquivosSimAm/"
         diretorio_destino = f"{os.getcwd()}/RepositorioArquivosSimAm/descompactado/"
 
         nome = {'Abertura de Exercício': '00', 'Janeiro': '01', 'Fevereiro': '02', 'Março': '03', 'Abril': '04',
@@ -88,8 +88,8 @@ def pages(page: ft.Page):
     def validar_arquivos(e):
         from pacote import Pacote
         pack = Pacote()
-        diretorio_zip = f"{os.getcwd()}\\RepositorioArquivosSimAm\\"
-        diretorio_destino = f"{os.getcwd()}\\RepositorioArquivosSimAm\\descompactado\\"
+        diretorio_zip = f"{os.getcwd()}/RepositorioArquivosSimAm/"
+        diretorio_destino = f"{os.getcwd()}/RepositorioArquivosSimAm/descompactado/"
         nome = {'Abertura de Exercício': '00', 'Janeiro': '01', 'Fevereiro': '02', 'Março': '03', 'Abril': '04',
                 'Maio': '05',
                 'Junho': '06', 'Julho': '07', 'Agosto': '08', 'Setembro': '09', 'Outubro': '10', 'Novembro': '11',
@@ -107,11 +107,11 @@ def pages(page: ft.Page):
         for ex in list_ex:
             for comp in list_comp:
                 if comp not in ['Abertura de Exercício', 'Encerramento de Exercício']:
-                    if os.path.exists(diretorio_destino+str(ex)+'\\'+str(nome[comp])):
-                        exercicio, competencia = pack.validar_arquivo(diretorio_destino+str(ex)+'\\'+str(nome[comp]))
+                    if os.path.exists(diretorio_destino+str(ex)+'/'+str(nome[comp])):
+                        exercicio, competencia = pack.validar_arquivo(diretorio_destino+str(ex)+'/'+str(nome[comp]))
                         if exercicio == ex and competencia != nome[comp]:
-                            pack.descompactar(diretorio_zip+str(ex)+'\\'+str(nome[comp]+'.zip'), diretorio_destino+str(exercicio)+'\\'+str(competencia))
-                            pack.remover_pasta(diretorio_destino+str(exercicio)+'\\'+str(nome[comp]))
+                            pack.descompactar(diretorio_zip+str(ex)+'/'+str(nome[comp]+'.zip'), diretorio_destino+str(exercicio)+'/'+str(competencia))
+                            pack.remover_pasta(diretorio_destino+str(exercicio)+'/'+str(nome[comp]))
 
     def checkbox_changed_exercicio(e):
         ex_2013.value=ex_all.value
@@ -217,5 +217,5 @@ if __name__ == "__main__":
     ft.app(target=pages)
 
 #  pyinstaller --name Sim_Am_robo_V_2.1.0 --hidden-import=patoolib --onefile --icon=robo.ico --noconsole main.py
-# flet pack --name Sim_Am_robo_V_2.1.0 --icon=robo.ico main.py
 # flet pack --name Sim_Am_robo_V_2.1.0 --hidden-import=patoolib --icon=robo.ico main.py
+# pyinstaller --name Sim_Am_robo_V_2.1.0 --hidden-import=patoolib.programs --hidden-import=patoolib.programs.p7zip --icon=robo.ico --console --onefile main.py

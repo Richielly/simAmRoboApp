@@ -1,26 +1,32 @@
 # -*- coding:utf-8 -*-
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import Select
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.webdriver.remote.webelement import WebElement
+# from selenium import webdriver
+# from selenium.webdriver.common.keys import Keys
+# from selenium.webdriver.support.ui import Select
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as ec
+# from selenium.webdriver.remote.webelement import WebElement
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 
 from datetime import datetime
 import time
-from pacote import Pacote
+import os
+# from pacote import Pacote
 from arquivo import Arquivo
+from selenium.webdriver.chrome.options import Options
 
 import configparser
 cfg = configparser.ConfigParser()
 cfg.read('cfg.ini')
 
-browser = webdriver.Chrome(ChromeDriverManager().install())
+options = Options()
+options.add_experimental_option("prefs", {"download.default_directory": f"{os.getcwd()}\downloads"})
+print(f"{os.getcwd()}\downloads")
+
+browser = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 arq = Arquivo()
 class Consulta:
-    def loginSimAm(self, usuario,senha):
+    def loginSimAm(self, usuario, senha):
         try:
             global browser
             browser.get("https://servicos.tce.pr.gov.br/tcepr/municipal/simam/Paginas/Consulta.aspx")
@@ -31,7 +37,7 @@ class Consulta:
             time.sleep(5)
             login_attempt = browser.find_element_by_xpath("//*[@type='submit']")
             login_attempt.submit()
-            arq.registrar_log(" ########## Acesso realizado com sucesso em: " + datetime.now().strftime('%d/%m/%Y %H:%M' +" ##########"))
+            arq.registrar_log(" ########## Acesso realizado com sucesso em: " + datetime.now().strftime("%d/%m/%Y %H:%M" + " ##########"))
             return True
         except: arq.registrar_log("Problema ao tentar fazer acesso em: " + datetime.now().strftime('%d/%m/%Y %H:%M'))
         return False
@@ -57,7 +63,7 @@ class Consulta:
             #Arquivo.registrar_log()
             # texto = browser.find_element_by_xpath("//select[@name='ctl00$ContentPlaceHolder1$hfLayout']/value[text()]")
             # print(texto)
-            self.processar(exercicio,competencia)
+            self.processar(exercicio, competencia)
 
             return True
 
@@ -110,6 +116,4 @@ class Consulta:
                 self.rota(exercicio,competencia)
 
         arq.registrar_log(" ########## Processo finalizado em: " + datetime.now().strftime('%d/%m/%Y %H:%M' + " ##########"))
-        # self.finalizarNavegador()
-
-
+        self.finalizarNavegador()

@@ -6,8 +6,12 @@ import configparser
 cfg = configparser.ConfigParser()
 cfg.read('cfg.ini')
 
-caminho_origem = cfg['DEFAULT']['pasta_download']
-caminho_destino = os.getcwd() + '\\RepositorioArquivosSimAm\\'
+# caminho_origem = cfg['DEFAULT']['pasta_download']
+if not os.path.exists(f"{os.getcwd()}\downloads"):
+    os.makedirs(f"{os.getcwd()}\downloads")
+    caminho_origem = f"{os.getcwd()}\downloads"
+
+caminho_destino = os.getcwd() + '/RepositorioArquivosSimAm/'
 class Arquivo:
     def renomear_arquivo(self, competencia,exercicio):
         os.chdir(caminho_origem)
@@ -16,8 +20,8 @@ class Arquivo:
         nome = {'Abertura de Exercício':'00','Janeiro':'01','Fevereiro':'02','Março':'03','Abril':'04','Maio':'05',
                 'Junho':'06','Julho':'07','Agosto':'08','Setembro':'09','Outubro':'10','Novembro':'11',
                 'Dezembro':'12','Encerramento de Exercício':'13'}
-        os.rename(arquivos[0],caminho_destino + str(exercicio) + '\\' + str(nome[competencia]) +'.zip')
-
+        os.rename(arquivos[0], caminho_destino + str(exercicio) + '/' + str(nome[competencia]) +'.zip')
+        # os.rename(arquivos[0], caminho_destino + str(exercicio) + '/' + str(arquivos[0]) + '.zip')
     def criar_diretorio(self, exercicio):
 
         if os.path.exists(caminho_destino+str(exercicio)):
@@ -121,6 +125,9 @@ class Arquivo:
 
         texto_exercicio = texto_competencia[0]
         texto_exercicio = texto_exercicio[-4::]
+
+        entidade = texto.split('|')[0]
+        print(entidade)
 
         return texto_exercicio, texto_competencia[1]
 

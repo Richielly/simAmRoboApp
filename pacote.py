@@ -3,7 +3,7 @@ import shutil
 from patoolib import extract_archive
 
 # diretorio = "C:\\Users\\Equiplano\\PycharmProjects\\simAmRoboApp\\RepositorioArquivosSimAm\\"
-diretorio = f"{os.getcwd()}\\RepositorioArquivosSimAm\\"
+diretorio = f"{os.getcwd()}/RepositorioArquivosSimAm/"
 
 class Pacote:
 
